@@ -52,21 +52,17 @@ namespace TEST_TAFE_ICT40120_Assessment02
         [DataRow(-10, 0, -10)]
         [DataRow(-10, 01, -10)]
         [DataRow(-10, 59868, -101218283)]
-        public void Job_Constructor_ReturnDateIsNull(int _year, int _month, int _day)
+        public void Job_Constructor_ReturnError(int _year, int _month, int _day)
         {
             Job result = null;
-            if (ErrorCheck.CheckValidDate(_year, _month, _day))
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
             {
+
                 result = new Job()
                 {
-
-
                     DeadLine = new DateTime(_year, _month, _day)
-
                 };
-            }
-
-            Assert.IsNull(result);
+            });
         }
 
         [TestMethod]
@@ -86,7 +82,7 @@ namespace TEST_TAFE_ICT40120_Assessment02
         [DataRow(123189)]
         public void Job_Constructor_ReturnCostAreNotEqual(double _cost)
         {
-            Job testJob = new Job() 
+            Job testJob = new Job()
             {
                 Cost = _cost
             };

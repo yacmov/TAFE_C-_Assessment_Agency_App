@@ -15,9 +15,10 @@ namespace TEST_TAFE_ICT40120_Assessment02
         DummyData dummyData = new DummyData();
 
         [TestMethod]
-        public void RecruitmentSystem_Constructor_ReturnDummyDataIsNull()
+        [DataRow(false)]
+        public void RecruitmentSystem_Constructor_ReturnDummyDataIsNull(bool _dummycheck)
         {
-            RecruitmentSystem testRsSystem = new RecruitmentSystem(false);
+            RecruitmentSystem testRsSystem = new RecruitmentSystem(_dummycheck);
             Assert.IsNull(testRsSystem.jobs);
             Assert.IsNull(testRsSystem.contractors);
             Assert.IsNull(testRsSystem.completed);
@@ -25,9 +26,10 @@ namespace TEST_TAFE_ICT40120_Assessment02
         }
 
         [TestMethod]
-        public void RecruitmentSystem_Constructor_ReturnDummyDataIsNotNull()
+        [DataRow(true)]
+        public void RecruitmentSystem_Constructor_ReturnDummyDataIsNotNull(bool _dummycheck)
         {
-            RecruitmentSystem testRsSystem = new RecruitmentSystem(true);
+            RecruitmentSystem testRsSystem = new RecruitmentSystem(_dummycheck);
             Assert.IsNotNull(testRsSystem.jobs);
             Assert.IsNotNull(testRsSystem.contractors);
             Assert.IsNotNull(testRsSystem.completed);
@@ -193,8 +195,6 @@ namespace TEST_TAFE_ICT40120_Assessment02
 
             Assert.AreEqual(testListCompleted[0].CompletedJob.Title, testListJobs[0].Title);
         }
-
-        
-
+       
     }
 }

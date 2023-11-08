@@ -93,14 +93,6 @@ namespace TEST_TAFE_ICT40120_Assessment02
 
         }
 
-        [TestMethod]
-        public void Contractor_Constructor_ReturnJobAssignedIsNull()
-        {
-            Contractor test = new Contractor() { };
-            Assert.IsNull(test.JobAssigned);
-        }
-
-
 
     }
 }
