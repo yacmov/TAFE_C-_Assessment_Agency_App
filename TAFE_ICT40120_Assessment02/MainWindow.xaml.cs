@@ -908,6 +908,11 @@ namespace TAFE_ICT40120_Assessment02
                 if (selectedContractor == null) { MessageBox.Show("Select Contractor"); return; }
                 reSystem.RemoveContractor(reSystem.contractors, selectedContractor);
                 Contractor newContractor = CreateContractor();
+                if (ComboBoxContractorStatus.SelectedIndex == 0)
+                {
+                    selectedContractor.JobAssigned.Status = JOB_STATUS.Pending;
+                    selectedContractor.JobAssigned.ContractorAssigned = null;
+                }
                 newContractor.Id = selectedContractor.Id;
                 if (!reSystem.AddContractor(reSystem.contractors, newContractor)) return;
                 LoadListView(ListViewContractor, MAINBUTTONS.CONTRACTOR, true, false);
