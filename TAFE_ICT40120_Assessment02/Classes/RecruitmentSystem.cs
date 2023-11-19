@@ -214,6 +214,7 @@ namespace TAFE_ICT40120_Assessment02.Classes
             _newJob.ContractorAssigned = null;
             newCancel.cancelJob = _newJob;
             cancelJobs.Add(newCancel);
+            newCancel.SetCancelValue();
         }
 
 
@@ -303,19 +304,19 @@ namespace TAFE_ICT40120_Assessment02.Classes
                 case MAINBUTTONS.CANCEL:
                     if (_stringSortDetail.Equals(SORT_HISTORY_BY_DETAILS.Default.ToString()))
                     {
-                        jobs = jobs.OrderByDescending(x => x.Id).ToList();
+                        cancelJobs =  cancelJobs.OrderByDescending(x => x.Id).ToList();
                     }
                     if (_stringSortDetail.Equals(SORT_HISTORY_BY_DETAILS.By_Date.ToString()))
                     {
-                        jobs = jobs.OrderBy(x => x.DeadLineYear).ThenBy(y => y.DeadLineMonth).ThenBy(z => z.DeadLineDay).ToList();
+                        cancelJobs = cancelJobs.OrderByDescending(x => x.DeadLineYear).ThenByDescending(y => y.DeadLineMonth).ThenByDescending(z => z.DeadLineDay).ToList();
                     }
                     else if (_stringSortDetail.Equals(SORT_HISTORY_BY_DETAILS.By_Cost.ToString()))
                     {
-                        jobs = jobs.OrderByDescending(x => x.Cost).ToList();
+                        cancelJobs = cancelJobs.OrderByDescending(x => x.Cost).ToList();
                     }
                     else if (_stringSortDetail.Equals(SORT_HISTORY_BY_DETAILS.By_Title.ToString()))
                     {
-                        jobs = jobs.OrderBy(x => x.Title).ToList();
+                        cancelJobs = cancelJobs.OrderBy(x => x.Title).ToList();
 
                     }
                     break;

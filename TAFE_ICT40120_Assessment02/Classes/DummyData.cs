@@ -191,6 +191,7 @@ namespace TAFE_ICT40120_Assessment02.Classes
                     newCancelJob.cancelJob = _jobs[index];
                     _jobs.Remove(_jobs[index]);
                     _listCancelJob.Add(newCancelJob);
+                    newCancelJob.SetCancelValue();
                 } 
             }
         }

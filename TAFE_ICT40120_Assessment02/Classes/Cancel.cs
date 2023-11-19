@@ -13,6 +13,22 @@ namespace TAFE_ICT40120_Assessment02.Classes
     public class Cancel
     {
         public Job cancelJob;
+        public string Title { get; set; }
+        public double Cost {  get; set; }  
+        public int Id { get; set; }
+        public int DeadLineDay { get; set; }
+        public int DeadLineMonth { get; set; }
+        public int DeadLineYear { get; set; }
+
+        public void SetCancelValue()
+        {
+            Title = cancelJob.Title;
+            DeadLineYear = cancelJob.DeadLineYear;
+            DeadLineMonth = cancelJob.DeadLineMonth;
+            DeadLineDay = cancelJob.DeadLineDay;
+            Cost = cancelJob.Cost;
+            Id = cancelJob.Id;
+        }
 
         public override string ToString()
         {

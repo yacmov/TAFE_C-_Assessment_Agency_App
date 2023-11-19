@@ -327,6 +327,7 @@ namespace TAFE_ICT40120_Assessment02
                 if (_comboBoxTarget.Name.Equals("ComboBoxJobStatus") && type == JOB_STATUS.All) continue;
                 if (_comboBoxTarget.Name.Equals("ComboBoxJobStatus") && type == JOB_STATUS.Completed) continue;
                 if (_comboBoxTarget.Name.Equals("ComboBoxSortJobRightView") && type == JOB_STATUS.Completed) continue;
+                if (_comboBoxTarget.Name.Equals("ComboBoxSortJobRightView") && type == JOB_STATUS.CANCEL) continue;
 
                 comboBox.Items.Add(type);
             }
@@ -976,7 +977,7 @@ namespace TAFE_ICT40120_Assessment02
             else if (selectedButton == ButtonViewJobUpdate)
             {
                 newJob = CreateJob();
-                if (ComboBoxJobContractor.SelectedValue == null)
+                if (ComboBoxJobContractor.SelectedIndex == -1 && ComboBoxJobStatus.SelectedIndex == 0)
                 {
                     MessageBox.Show("Select Contractor");
                     return;
@@ -1045,7 +1046,7 @@ namespace TAFE_ICT40120_Assessment02
                     }
                     
                     reSystem.AddJob(reSystem.jobs, newJob);
-                    if (ListViewJobLeft.SelectedIndex == -1 && ComboBoxJobContractor.SelectedIndex == -1)
+                    if (ListViewJobLeft.SelectedIndex == -1 && ComboBoxJobContractor.SelectedIndex == 0)
                     {
                         MessageBox.Show("Select Contractor");
                         return;
@@ -1072,6 +1073,8 @@ namespace TAFE_ICT40120_Assessment02
                     reSystem.CancelJob(newJob);
                     reSystem.RemoveJob(reSystem.jobs, newJob);
                     MessageBox.Show("Job Cancel");
+                    ClearInformation();
+
                 }
 
 
