@@ -47,12 +47,12 @@ namespace TAFE_ICT40120_Assessment02.Classes
         public RecruitmentSystem(bool _enableDummyData)
         {
             if (_enableDummyData == false) return;
-            int contractorAvailable = 200;
-            int contractorHoliday = 15;
-            int ContractorETC = 5;
-            int JobPending = 50;
+            int contractorAvailable = 10;
+            int contractorHoliday = 2;
+            int ContractorETC = 1;
+            int JobPending = 10;
             int JobCancel = 5;
-            int JobCompleted = 15;
+            int JobCompleted = 2;
             DummyData dummyData = new DummyData();
             contractors = dummyData.LoadDummyContractors(contractorAvailable, contractorHoliday, ContractorETC);
             jobs = dummyData.LoadDummyJobs(JobPending, JobCancel);
