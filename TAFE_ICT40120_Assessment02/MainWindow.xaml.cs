@@ -1017,6 +1017,7 @@ namespace TAFE_ICT40120_Assessment02
                     {
                         newJob.ContractorAssigned = selectedJob.ContractorAssigned;
                         newJob.ContractorAssigned.Status = CONTRACTOR_STATUS.Available;
+                        newJob.ContractorAssigned.JobAssigned.Status = JOB_STATUS.Pending;
                         newJob.ContractorAssigned.JobAssigned = null;
                         newJob.ContractorAssigned = null;
                     }
