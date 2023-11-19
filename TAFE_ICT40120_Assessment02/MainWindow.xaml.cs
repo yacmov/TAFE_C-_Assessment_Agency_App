@@ -1072,6 +1072,8 @@ namespace TAFE_ICT40120_Assessment02
                         return;
                     }
                     reSystem.CancelJob(newJob);
+                    LoadListView(ListViewJobLeft, MAINBUTTONS.JOB, false, false);
+                    LoadListView(ListViewJobRight, MAINBUTTONS.JOB, true, false);
                 }
                 if (ComboBoxJobStatus.Text == JOB_STATUS.CANCEL.ToString())
                 {
