@@ -113,6 +113,10 @@ namespace TAFE_ICT40120_Assessment02.Classes
             {
                 TitleShort = $"{Title.Substring(0, count)}...";
             }
+            else
+            {
+                TitleShort = Title;
+            }
 
             return $" {Level}, {TitleShort,-8}\t{DeadLine.ToString("dd/MM/yy")}  ${Cost.ToString("000.###")}\t{Status,-10}\t{printAssignedContractor}";
         }

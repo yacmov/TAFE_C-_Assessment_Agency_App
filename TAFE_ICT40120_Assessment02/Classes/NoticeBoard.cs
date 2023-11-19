@@ -42,6 +42,7 @@ namespace TAFE_ICT40120_Assessment02.Classes
         public string AddNotice(string _sort, string _text)
         {
             string notice;
+            if (_text == "") return null;
             if (_sort.Equals(MAINBUTTONS.NOTICE.ToString()))
             {
                 _sort = $"**** {_sort} ****  ";

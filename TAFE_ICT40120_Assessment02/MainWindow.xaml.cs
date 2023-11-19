@@ -85,8 +85,9 @@ namespace TAFE_ICT40120_Assessment02
             int year = ErrorCheck.CheckValidNumber($"20{ComboBoxDeadLineYear.Text}");
             double cost = SliderJobCost.Value;
             JOB_STATUS status = (JOB_STATUS)Enum.Parse(typeof(JOB_STATUS), ComboBoxJobStatus.Text);
-            LEVEL level = reSystem.LevelCalculator(SliderJobCost.Value, MAINBUTTONS.CONTRACTOR);
+            LEVEL level = reSystem.LevelCalculator(SliderJobCost.Value, MAINBUTTONS.JOB);
             Job newJob = null;
+
             if (ErrorCheck.CheckValidDate(year, month, day))
             {
                 newJob = new Job(level, title, new DateTime(year, month, day), cost, status);
@@ -100,6 +101,7 @@ namespace TAFE_ICT40120_Assessment02
             SetSliderDefault();
             SetComboBoxDefault(MAINBUTTONS.JOB);
             SetComboBoxDefault(MAINBUTTONS.CONTRACTOR);
+            selectedJob = null;
 
 
         }
@@ -107,10 +109,10 @@ namespace TAFE_ICT40120_Assessment02
         private void SetSliderDefault()
         {
             int minimumWage = 30;
-            int minimumJobCost = 100;
+            int minimumJobCost = 30;
             SliderWage.Value = minimumWage;
-            SliderWage.Minimum = RecruitmentSystem.minimumJobCost;
-            SliderWage.Maximum = RecruitmentSystem.maximumJobCost;
+            SliderWage.Minimum = RecruitmentSystem.minimumContractorWage;
+            SliderWage.Maximum = RecruitmentSystem.maximumContractorWage;
             SliderJobCost.Value = minimumJobCost;
             SliderJobCost.Minimum = RecruitmentSystem.minimumJobCost;
             SliderJobCost.Maximum = RecruitmentSystem.maximumJobCost;
@@ -791,7 +793,7 @@ namespace TAFE_ICT40120_Assessment02
                     GridViewIntro.Visibility = UnSelectedView;
 
                     LoadListView(ListViewJobLeft, MAINBUTTONS.CONTRACTOR, false, false);
-                    LoadListView(ListViewJobRight, MAINBUTTONS.JOB, false, false);
+                    LoadListView(ListViewJobRight, MAINBUTTONS.JOB, true, false);
 
                     LoadComboBox(ComboBoxJobContractor, MAINBUTTONS.CONTRACTOR, false);
                     LoadComboBox(ComboBoxJobStatus, new JOB_STATUS());
@@ -840,6 +842,7 @@ namespace TAFE_ICT40120_Assessment02
 
         private void ButtonNoticeSend_Click(object sender, RoutedEventArgs e)
         {
+            if (TextBoxNotice.Text == "") return;
             LoadNotice(ListViewNotice, ComboBoxNoticeSort, TextBoxNotice);
             MessageBox.Show("Message Sent");
             TextBoxNotice.Text = "";
@@ -930,13 +933,18 @@ namespace TAFE_ICT40120_Assessment02
         private void ButtonJob_Click(object sender, RoutedEventArgs e)
         {
             Button selectedButton = sender as Button;
-            Job newJob = CreateJob();
-
-
-
+            Job newJob = null;
 
             if (selectedButton == ButtonViewJobAdd)
             {
+                if (ComboBoxJobStatus.SelectedValue.ToString() == "CANCEL" || ComboBoxJobStatus.SelectedValue.ToString() == "Assigned")
+                {
+                    MessageBox.Show("== Add Job == \n\nSelect Pending first \nbefore Job update assigned or cancel");
+                    return;
+                }
+
+                newJob = CreateJob();
+
                 if (TextBoxJobTitle.Text == "")
                 {
                     MessageBox.Show("Enter Titles");
@@ -957,15 +965,22 @@ namespace TAFE_ICT40120_Assessment02
                     MessageBox.Show("Invalid date");
                     return;
                 }
+                if (newJob == null) return;
                 reSystem.AddJob(reSystem.jobs, newJob);
                 LoadListView(ListViewJobLeft, MAINBUTTONS.JOB, false, false);
-                LoadListView(ListViewJobRight, MAINBUTTONS.JOB, true, false);
+                LoadListView(ListViewJobRight, MAINBUTTONS.JOB, false, false);
                 LoadNotice(ListViewNotice, newJob);
                 MessageBox.Show("Added");
 
             }
             else if (selectedButton == ButtonViewJobUpdate)
             {
+                newJob = CreateJob();
+                if (ComboBoxJobContractor.SelectedValue == null)
+                {
+                    MessageBox.Show("Select Contractor");
+                    return;
+                }
                 if (TextBoxJobTitle.Text == "")
                 {
                     MessageBox.Show("Enter Titles");
@@ -1004,7 +1019,7 @@ namespace TAFE_ICT40120_Assessment02
                 if (ComboBoxJobStatus.Text == JOB_STATUS.Assigned.ToString())
                 {
 
-                    // the job already assigned and ask agian to change to another person
+                    // the job already assigned and ask again to change to another person
                     Contractor currentSelectedContractor = selectedContractor;
                     
                     selectedContractor = reSystem.GetSelectedContractor(reSystem.contractors, ComboBoxJobContractor.SelectedValue.ToString());
@@ -1016,6 +1031,7 @@ namespace TAFE_ICT40120_Assessment02
                             == {selectedContractor.FullName} ==
                             Already has a Job
                             Do you want assign another Job?
+                            * Previous job will be back to pool
 
                             """;
                         MessageBoxResult check = MessageBox.Show(message, "Confirm", MessageBoxButton.OKCancel);
@@ -1024,7 +1040,7 @@ namespace TAFE_ICT40120_Assessment02
                             return;
                         }
                         selectedContractor.JobAssigned.Status = JOB_STATUS.Pending;
-                        selectedContractor.Status = CONTRACTOR_STATUS.Available;
+                        selectedContractor.JobAssigned.ContractorAssigned = null;
                      
                     }
                     
@@ -1034,8 +1050,12 @@ namespace TAFE_ICT40120_Assessment02
                         MessageBox.Show("Select Contractor");
                         return;
                     }
+
+                    JOB_STATUS tempJobStates = newJob.Status;
+
                     if (!reSystem.AssignJob(selectedContractor, newJob, ComboBoxJobStatus.SelectedValue.ToString()))
                     {
+                        newJob.Status = tempJobStates;
                         string message = $"""
                             Cannot assign lower Level than Job Level
                                      
@@ -1071,6 +1091,7 @@ namespace TAFE_ICT40120_Assessment02
                     LoadListView(ListViewJobRight, MAINBUTTONS.JOB, true, false);
                 }
                 MessageBox.Show("Deleted");
+                selectedJob = null;
             }
             else if (selectedButton == ButtonViewJobCompleted)
             {
@@ -1085,6 +1106,7 @@ namespace TAFE_ICT40120_Assessment02
                     reSystem.RemoveJob(reSystem.jobs, selectedJob);
                     LoadNotice(ListViewNotice, reSystem.completed[reSystem.completed.Count - 1]);
                     MessageBox.Show("Completed");
+                    ClearInformation();
 
                 }
             }
@@ -1237,6 +1259,7 @@ namespace TAFE_ICT40120_Assessment02
             if (listViewSelected == null) return;
             if (listViewSelected == ListViewHistoryCompleted)
             {
+                if (ListViewHistoryCompleted.SelectedItem == null) return;
                 Completed selectedCompleted = ListViewHistoryCompleted.SelectedItem as Completed;
                 string message = $""" 
                     ======== Completed By =======
@@ -1254,6 +1277,7 @@ namespace TAFE_ICT40120_Assessment02
             }
             else if (listViewSelected == ListViewHistoryCancel)
             {
+                if (ListViewHistoryCancel.SelectedItem == null) return;
                 Cancel selectedCancelJob = ListViewHistoryCancel.SelectedItem as Cancel;
                 string message = $""" 
                     ======== Cancel Job =======
